@@ -15,13 +15,13 @@ NOTIFY_SETTINGS = {
 	}
 
 # Initialize the notifications class
-nt = Notifications()
+#nt = Notifications()
 
 # Set up the screen for first run
-lcd.write('x\0C')
+lcd.write('x\0C') # Carriage Return (Clear any text)
 sleep(1) # Necessary delay after clearing display
-lcd.write('x\17')
-lcd.write('x\11')
+lcd.write('x\16') # Display on, no cursor, no blink
+lcd.write('x\11') # Backlight on
 
 # Loop through the list of settings and display
 while True:
