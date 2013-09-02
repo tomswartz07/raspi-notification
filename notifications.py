@@ -22,12 +22,10 @@ class Notifications:
 	def status_torrents(self):
 		try:
 			torrents = transmissionrpc.Client(self.TORRENT_HOST, port=self.TORRENT_PORT, user=self.TORRENT_USER, password=self.TORRENT_PASS)
-			print(self.TORRENT_HOST, self.TORRENT_PORT, self.TORRENT_USER, self.TORRENT_PASS)
 			stats = torrents.session_stats()
 			download = stats.downloadSpeed/1000
 			upload = stats.uploadSpeed/1000
-
-			return 'Active: %2d (%3d)' % (stats.activeTorrentCount, stats.torrentCount), '%5dKB %4dKB' % (down, up)
+			return "Active: %d (%d)  DL:%dKB UL:%dKB" % (stats.activeTorrentCount, stats.torrentCount, download, upload)
 		except:
 			return format("Unable to parse torrent info")
 
@@ -64,7 +62,7 @@ class Notifications:
 			temp_current = data['main']['temp']
 			temp_high = data['main']['temp_max']
 			temp_low = data['main']['temp_min']
-			return temp_current, temp_high, temp_low
+			return "Currently: %.0f   Hi:%.0f Lo:%.0f" % (temp_current, temp_high, temp_low)
 		except Exception:
 			return format('Unable to fetch weather data')
 
