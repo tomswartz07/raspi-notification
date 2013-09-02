@@ -25,7 +25,7 @@ class Notifications:
 			stats = torrents.session_stats()
 			download = stats.downloadSpeed/1000
 			upload = stats.uploadSpeed/1000
-			return "Active: %d (%d)  DL:%dKB UL:%dKB" % (stats.activeTorrentCount, stats.torrentCount, download, upload)
+			return "Active: %d of %d DL:%dKB UL:%dKB" % (stats.activeTorrentCount, stats.torrentCount, download, upload)
 		except:
 			return format("Unable to parse torrent info")
 
@@ -44,7 +44,7 @@ class Notifications:
 			return format('Unable to Load  Disk Usage')
 
 	def startup(self):
-		return format('System Starting Up')
+		return format('System Starting Up - Loading...')
 
 	def _fetchJson(self, url):
 		try:
@@ -62,7 +62,7 @@ class Notifications:
 			temp_current = data['main']['temp']
 			temp_high = data['main']['temp_max']
 			temp_low = data['main']['temp_min']
-			return "Currently: %.0f   Hi:%.0f Lo:%.0f" % (temp_current, temp_high, temp_low)
+			return "Current Temp:%3.0f High:%.0f Low:%.0f" % (temp_current, temp_high, temp_low)
 		except Exception:
 			return format('Unable to fetch weather data')
 
