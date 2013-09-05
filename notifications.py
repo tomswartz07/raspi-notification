@@ -1,6 +1,8 @@
 #!/bin/python
 from datetime import datetime
 import transmissionrpc
+import psutil
+import imaplib
 import urllib2, json
 import subprocess
 
@@ -13,11 +15,20 @@ class Notifications:
 	TORRENT_PASS	= 'password'
 	WEATHER_CITY	= '5197079' # CityID from openweathermap.org
 	WEATHER_UNIT	= 'imperial'
+	MAIL_SERVER	= 'mail.pennmanor.net'
+	EMAIL_USER	= 'user'
+	EMAIL_PASS	= 'password'
 	DISK_FS		= ['/','/Elements']
 	STATIC_MODE	= False
 
 	def status_date(self):
-		return datetime.now().strftime(self.DATE_FMT)
+		mem = psutil.virtual_memory()
+
+		try:
+			cpu_temp = float([line.strip() for line in open(self.TEMP_SYS)][0])/1000
+		except Exception:
+			cpu_temp = 0.0
+		return datetime.now().strftime(self.DATE_FMT) + "Mem:%2.1f%% T:%3.1f" % (mem.percent, cpu_temp)
 
 	def status_torrents(self):
 		try:
@@ -46,6 +57,22 @@ class Notifications:
 	def startup(self):
 		return format('System Starting Up - Loading...')
 
+	def status_email(self):
+		try:
+			mail = imaplib.IMAP4_SSL(self.MAIL_SERVER)
+			mail.login(self.EMAIL_USER, self.EMAIL_PASS)
+			mail.select()
+			unread = mail.search(None,'UnSeen')
+			count = len(unread[1][0].split())
+			mail.close()
+			return "Penn Manor EmailInbox: %d" % (count)
+		except (KeyboardInterrupt, SystemExit):
+			mail.close()
+			return format('Sys Err. Closing Mail')
+		except:
+			mail.close()
+			return format('IMAP Error')
+
 	def _fetchJson(self, url):
 		try:
 			request = urllib2.Request(url)
@@ -70,6 +97,7 @@ if __name__ == '__main__':
 	nt = Notifications()
 	nt.status_date()
 	nt.startup()
+	nt.status_email()
 	nt.status_torrents()
 	nt.status_weather()
 	nt.status_disk()

@@ -8,9 +8,10 @@ lcd = serial.Serial(port='/dev/ttyAMA0',baudrate=9600)
 
 # Format is 'message'; time to display,
 NOTIFY_SETTINGS = {
-	'status_date':	9,
+	'status_date':	30,
 	'status_torrents': 9,
-	'status_weather': 9,
+	'status_email' : 10,
+	'status_weather': 30,
 	'status_disk':	9,
 	}
 
@@ -33,5 +34,4 @@ while True:
 			lcd.write(chr(12))
 			sleep(1)
 			lcd.write(msg)
-			print(msg)
 			sleep(TIMEOUT)
